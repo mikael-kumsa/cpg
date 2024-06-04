@@ -1,0 +1,59 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Template {
+  content   Json?
+  createdAt DateTime              @default(now())
+  id        String                @id @default(cuid())
+  language  EnumTemplateLanguage?
+  name      String?
+  updatedAt DateTime              @updatedAt
+}
+
+model Company {
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  industry  String?
+  location  String?
+  name      String?
+  profiles  Profile[]
+  updatedAt DateTime  @updatedAt
+  website   String?
+}
+
+model Profile {
+  company     Company?           @relation(fields: [companyId], references: [id])
+  companyId   String?
+  createdAt   DateTime           @default(now())
+  description String?
+  format      EnumProfileFormat?
+  id          String             @id @default(cuid())
+  title       String?
+  updatedAt   DateTime           @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+enum EnumTemplateLanguage {
+  Option1
+}
+
+enum EnumProfileFormat {
+  Option1
+}
